@@ -14,4 +14,14 @@ Here are some **resources** and **quicklinks** for you to check out:
 - [Markdown cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 
 
+Meet the team:
+* Mr Kirodh Boodhraj
+* Dr Kobie Smit
+* Dr Nicolene Botha
+* Mr Chris Mahlathi
+* Mr Gert Wessels
+* Mrs Melise Steyn
+
+
+
 Kirodh Boodhraj

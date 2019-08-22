@@ -5,6 +5,13 @@
     :synopsis: This module holds the functions developed by Kirodh Boodhraj.
 .. moduleauthor:: Kirodh Boodhraj <kboodhraj@csir.co.za>
 
+TODO
+Things to put in home page
+contact details
+contents of links
+team members
+oceans 21 logo
+
 
 """
 
@@ -115,6 +122,8 @@ class Kirodh():
                     ]
                 }
             )
+
+
 
 
 
