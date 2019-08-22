@@ -8,10 +8,10 @@ This repository contains the development files for the Heroku app that will be u
 
 
 Here are some **resources** and **quicklinks** for you to check out:
--[Dash documentation](https://dash.plot.ly/)
--[Dash-daq documentation](https://dash.plot.ly/dash-daq)
--[Git push and pull](https://gist.github.com/blackfalcon/8428401)
--[Markdown cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+- [Dash documentation](https://dash.plot.ly/)
+- [Dash-daq documentation](https://dash.plot.ly/dash-daq)
+- [Git push and pull](https://gist.github.com/blackfalcon/8428401)
+- [Markdown cheat sheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 
 
 Kirodh Boodhraj
