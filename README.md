@@ -1,4 +1,4 @@
-# **Oceans_21_PG_proj**
+# **Oceans 21 PG proj**
 
 ![alt text](support/logo/oceans21logo_small.png "Oceans 21")
 
