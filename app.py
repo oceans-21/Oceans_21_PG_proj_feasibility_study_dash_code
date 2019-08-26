@@ -19,13 +19,13 @@ import pathlib as pl
 import pandas as pd
 import numpy as np
 
-# import support functions:
-from support.nicolene import Nicolene
-from support.kobie import Kobie
-from support.gert import Gert
-from support.chris import Chris
-from support.melise import Melise
-from support.kirodh import Kirodh
+# # import support functions:
+# from support.nicolene import Nicolene
+# from support.kobie import Kobie
+# from support.gert import Gert
+# from support.chris import Chris
+# from support.melise import Melise
+# from support.kirodh import Kirodh
 
 
 external_stylesheets = ['assets\style.css']
@@ -34,122 +34,127 @@ external_stylesheets = ['assets\style.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 # app = dash.Dash(__name__)
 
-app.layout = html.Div([
-    dcc.Tabs(id="tabs", children=[
-        dcc.Tab(
-            # tab properties:
-            id="welcome",
-            label='Welcome',
-            value='tab-welcome',
-            className='custom-tab',
-            selected_className='custom-tab--selected',
-            # tab content:
-            children=[
-                html.Div("stuff to introduce the proj"),
-                html.Div("hi there :-)")
-        ]),
-        dcc.Tab(
-            # tab properties:
-            id="temperature",
-            label='Temperature',
-            value='tab-temperature',
-            className='custom-tab',
-            selected_className='custom-tab--selected',
-            # tab content:
-            children=[
-                html.Div("stuff to introduce the proj"),
-                html.Div("hi there :-)")
-        ]),
-        dcc.Tab(
-            # tab properties:
-            id="salinity",
-            label='Salinity',
-            value='tab-salinity',
-            className='custom-tab',
-            selected_className='custom-tab--selected',
-            # tab content:
-            children=[
-                html.Div("stuff to introduce the proj"),
-                html.Div("hi there :-)")
-        ]),
-        dcc.Tab(
-            # tab properties:
-            id="currents",
-            label='Currents',
-            value='tab-currents',
-            className='custom-tab',
-            selected_className='custom-tab--selected',
-            # tab content:
-            children=[
-                html.Div("stuff to introduce the proj"),
-                html.Div("hi there :-)")
-        ]),
-        dcc.Tab(
-            # tab properties:
-            id="energy",
-            label='Energy',
-            value='tab-energy',
-            className='custom-tab',
-            selected_className='custom-tab--selected',
-            # tab content:
-            children=[
-                html.Div("stuff to introduce the proj"),
-                html.Div("hi there :-)")
-        ]),
-        dcc.Tab(
-            # tab properties:
-            id="waves",
-            label='Waves',
-            value='tab-waves',
-            className='custom-tab',
-            selected_className='custom-tab--selected',
-            # tab content:
-            children=[
-                html.Div("stuff to introduce the proj"),
-                html.Div("hi there :-)")
-        ]),
-        dcc.Tab(
-            # tab properties:
-            id="ship_route_optimization",
-            label='Ship route optimization',
-            value='tab-ship_route_optimization',
-            className='custom-tab',
-            selected_className='custom-tab--selected',
-            # tab content:
-            children=[
-                html.Div("stuff to introduce the proj"),
-                html.Div("hi there :-)")
-        ]),
-        dcc.Tab(
-            # tab properties:
-            id="particle_tracking",
-            label='Particle tracking',
-            value='tab-particle_tracking',
-            className='custom-tab',
-            selected_className='custom-tab--selected',
-            # tab content:
-            children=[
-                html.Div("stuff to introduce the proj"),
-                html.Div("hi there :-)")
-        ]),
-        dcc.Tab(
-            # tab properties:
-            id="ocean_surface",
-            label='Ocean surface',
-            value='tab-ocean_surface',
-            className='custom-tab',
-            selected_className='custom-tab--selected',
-            # tab content:
-            children=[
-                html.Div("stuff to introduce the proj"),
-                html.Div("hi ther :-)")
-        ]),
-    ])
-])
+server = app.server
+app.config.suppress_callback_exceptions = True
 
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+
+# app.layout = html.Div([
+#     dcc.Tabs(id="tabs", children=[
+#         dcc.Tab(
+#             # tab properties:
+#             id="welcome",
+#             label='Welcome',
+#             value='tab-welcome',
+#             className='custom-tab',
+#             selected_className='custom-tab--selected',
+#             # tab content:
+#             children=[
+#                 html.Div("stuff to introduce the proj"),
+#                 html.Div("hi there :-)")
+#         ]),
+#         dcc.Tab(
+#             # tab properties:
+#             id="temperature",
+#             label='Temperature',
+#             value='tab-temperature',
+#             className='custom-tab',
+#             selected_className='custom-tab--selected',
+#             # tab content:
+#             children=[
+#                 html.Div("stuff to introduce the proj"),
+#                 html.Div("hi there :-)")
+#         ]),
+#         dcc.Tab(
+#             # tab properties:
+#             id="salinity",
+#             label='Salinity',
+#             value='tab-salinity',
+#             className='custom-tab',
+#             selected_className='custom-tab--selected',
+#             # tab content:
+#             children=[
+#                 html.Div("stuff to introduce the proj"),
+#                 html.Div("hi there :-)")
+#         ]),
+#         dcc.Tab(
+#             # tab properties:
+#             id="currents",
+#             label='Currents',
+#             value='tab-currents',
+#             className='custom-tab',
+#             selected_className='custom-tab--selected',
+#             # tab content:
+#             children=[
+#                 html.Div("stuff to introduce the proj"),
+#                 html.Div("hi there :-)")
+#         ]),
+#         dcc.Tab(
+#             # tab properties:
+#             id="energy",
+#             label='Energy',
+#             value='tab-energy',
+#             className='custom-tab',
+#             selected_className='custom-tab--selected',
+#             # tab content:
+#             children=[
+#                 html.Div("stuff to introduce the proj"),
+#                 html.Div("hi there :-)")
+#         ]),
+#         dcc.Tab(
+#             # tab properties:
+#             id="waves",
+#             label='Waves',
+#             value='tab-waves',
+#             className='custom-tab',
+#             selected_className='custom-tab--selected',
+#             # tab content:
+#             children=[
+#                 html.Div("stuff to introduce the proj"),
+#                 html.Div("hi there :-)")
+#         ]),
+#         dcc.Tab(
+#             # tab properties:
+#             id="ship_route_optimization",
+#             label='Ship route optimization',
+#             value='tab-ship_route_optimization',
+#             className='custom-tab',
+#             selected_className='custom-tab--selected',
+#             # tab content:
+#             children=[
+#                 html.Div("stuff to introduce the proj"),
+#                 html.Div("hi there :-)")
+#         ]),
+#         dcc.Tab(
+#             # tab properties:
+#             id="particle_tracking",
+#             label='Particle tracking',
+#             value='tab-particle_tracking',
+#             className='custom-tab',
+#             selected_className='custom-tab--selected',
+#             # tab content:
+#             children=[
+#                 html.Div("stuff to introduce the proj"),
+#                 html.Div("hi there :-)")
+#         ]),
+#         dcc.Tab(
+#             # tab properties:
+#             id="ocean_surface",
+#             label='Ocean surface',
+#             value='tab-ocean_surface',
+#             className='custom-tab',
+#             selected_className='custom-tab--selected',
+#             # tab content:
+#             children=[
+#                 html.Div("stuff to introduce the proj"),
+#                 html.Div("hi ther :-)")
+#         ]),
+#     ])
+# ])
+#
+#
+# if __name__ == '__main__':
+#     app.run_server(debug=True)
 
 
 

@@ -131,7 +131,44 @@ body {
   line-height: 1.6;
   font-weight: 400;
   font-family: "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: rgb(50, 50, 50); }
+  color: rgb(50, 50, 50);
+  /* I put this here for background */
+  /* background-image: url("oceans21logo_small.png") ; */
+  background-repeat: no-repeat;
+  background-position: right top;
+  /* background-size: 200px 200px; */
+  /* background-image: linear-gradient(to top, #7f7fD5 0%, #86A8E7 100%); */
+  background-image: linear-gradient(to top, #16edff 0%, white 100%);
+
+  /* background-color: #cccccc; */
+}
+/* page-content.body{
+  background-image: linear-gradient(to top, #7f7fD5 0%, #86A8E7 100%, #91EAE4 100%);
+} */
+
+/* .logo { */
+  /* background-image: url("oceans21logo_small.png") ; */
+  /* position: absolute; */
+  /* src: "assets/oceans21logo_small.png"); */
+  /* height: auto; */
+  /* width: auto; */
+  /* float: right; */
+  /* position: relative; */
+  /* padding-top: 0; */
+  /* padding-right: 0; */
+/* } */
+
+/* I put this here for background */
+/* body#welcomePages{
+    background-image: url("oceans21logo_small.png") ;
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: cover;
+} */
+
+/* .the_title{ */
+  /* color: yellow; */
+/* } */
 
 
 /* Typography
@@ -146,6 +183,16 @@ h3 { font-size: 3.0rem; line-height: 1.3;  letter-spacing: -.1rem; margin-bottom
 h4 { font-size: 2.6rem; line-height: 1.35; letter-spacing: -.08rem; margin-bottom: 1.2rem; margin-top: 1.2rem;}
 h5 { font-size: 2.2rem; line-height: 1.5;  letter-spacing: -.05rem; margin-bottom: 0.6rem; margin-top: 0.6rem;}
 h6 { font-size: 2.0rem; line-height: 1.6;  letter-spacing: 0; margin-bottom: 0.75rem; margin-top: 0.75rem;}
+
+
+/* for the font, i put this here */
+h1 {
+  font-family: "Impact", fantasy;
+  color: #0e25ca;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
 
 p {
   margin-top: 0; }
@@ -182,7 +229,8 @@ input[type="button"] {
   display: inline-block;
   height: 38px;
   padding: 0 30px;
-  color: #555;
+  /* color: white; */
+  color: #86c8ca;
   text-align: center;
   font-size: 11px;
   font-weight: 600;
@@ -192,7 +240,7 @@ input[type="button"] {
   text-decoration: none;
   white-space: nowrap;
   background-color: transparent;
-  border-radius: 4px;
+  border-radius: 500px; /*4px;*/
   border: 1px solid #bbb;
   cursor: pointer;
   box-sizing: border-box; }
@@ -215,7 +263,7 @@ input[type="submit"].button-primary,
 input[type="reset"].button-primary,
 input[type="button"].button-primary {
   color: #FFF;
-  background-color: #33C3F0;
+  /* background-color: #33C3F0; */
   border-color: #33C3F0; }
 .button.button-primary:hover,
 button.button-primary:hover,
@@ -228,8 +276,75 @@ input[type="submit"].button-primary:focus,
 input[type="reset"].button-primary:focus,
 input[type="button"].button-primary:focus {
   color: #FFF;
-  background-color: #1EAEDB;
+  /* background-color: #1EAEDB; */
   border-color: #1EAEDB; }
+  /* this is for the particle tracking button */
+.particleTrackingButton {
+  display: inline-block;
+  background-image: url('particle_tracking.gif');
+  /* background-position: center; */
+  border-radius: 500px; /*4px;*/
+  color: #FFF;
+}
+.welcomePage {
+  background-color: blue;
+  display: inline-block;
+  border-radius: 500px;
+}
+
+/* this is for the aprticle tracking button */
+.temperature {
+  display: inline-block;
+  background-image: url('temperature.gif');
+  /* background-position: center; */
+  border-radius: 500px; /*4px;*/
+}
+/* this is for the aprticle tracking button */
+.salinity {
+  display: inline-block;
+  background-image: url('salinity.gif');
+  background-position: center;
+  border-radius: 500px; /*4px;*/
+}
+/* this is for the aprticle tracking button */
+.currents {
+  display: inline-block;
+  background-image: url('currents.gif');
+  background-position: center;
+  border-radius: 500px; /*4px;*/
+}
+/* this is for the aprticle tracking button */
+.energy {
+  display: inline-block;
+  background-image: url('energy.gif');
+  /* background-position: center; */
+  border-radius: 500px; /*4px;*/
+}
+/* this is for the aprticle tracking button */
+.waves {
+  display: inline-block;
+  background-image: url('wave.gif');
+  background-position: center;
+  border-radius: 500px; /*4px;*/
+}
+/* this is for the aprticle tracking button */
+.shipRouteOptimization {
+  display: inline-block;
+  background-image: url('shipRouteOptimization.gif');
+  background-position: right;
+  border-radius: 500px; /*4px;*/
+}
+/* this is for the aprticle tracking button */
+.oceanSurface {
+  display: inline-block;
+  background-image: url('surface.gif');
+  background-position: center;
+  border-radius: 500px; /*4px;*/
+}
+
+
+
+
 
 
 /* Forms
@@ -245,7 +360,7 @@ textarea,
 select {
   height: 38px;
   padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
-  background-color: #fff;
+  /* background-color: #fff; */
   border: 1px solid #D1D1D1;
   border-radius: 4px;
   box-shadow: none;
@@ -421,7 +536,7 @@ there.
 .custom-tabs {
 
     border-top-left-radius: 3px;
-    background-color: #f9f9f9;
+    /* background-color: #f9f9f9; */
     padding: 0px 24px;
     border-bottom: 1px solid #d6d6d6;
 }
@@ -435,7 +550,7 @@ there.
     border-left: 0px !important;
     border-right: 0px !important;
     border-bottom: 0px !important;
-    background-color: #fafbfc;
+    /* background-color: #fafbfc; */
     padding: 12px !important;
     font-family: "system-ui";
     display: flex !important;
@@ -444,7 +559,7 @@ there.
 }
 .custom-tab--selected {
     border-top-left-radius: 3px;
-    background-color: #f9f9f9;
+    /* background-color: #f9f9f9; */
     padding: 0px 24px;
     border-bottom: 1px solid #d6d6d6;
     color: black;

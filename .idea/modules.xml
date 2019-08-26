@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../convert shape file to xyz/.idea/convert shape file to xyz.iml" filepath="$PROJECT_DIR$/../convert shape file to xyz/.idea/convert shape file to xyz.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/oceans_21_dash_heroku.iml" filepath="$PROJECT_DIR$/.idea/oceans_21_dash_heroku.iml" />
     </modules>
   </component>
