@@ -5,6 +5,11 @@
     :synopsis: This module holds the functions developed by Kirodh Boodhraj.
 .. moduleauthor:: Kirodh Boodhraj <kboodhraj@csir.co.za>
 
+TODO
+say it is demo data
+explain frequency of data
+Mention CHPC
+mention the approach
 
 """
 

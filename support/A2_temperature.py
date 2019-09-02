@@ -98,7 +98,7 @@ the_graph = dcc.Graph(
 dropdown = dcc.Dropdown(
         id='temperature-dropdown',
         options=[
-            {'label': 'App 1 - {}'.format(i), 'value': i} for i in ['NYC', 'MTL', 'LA']
+            {'label': 'App 1 - {}'.format(i), 'value': i} for i in ['NYC', 'MTL', 'LA',"cat"]
         ],value="hello"
     )
 
@@ -112,8 +112,10 @@ layout = html.Div([
     header_text,html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),
 
     # Your components:
-    dropdown,
+
     the_graph,
+dropdown,
+the_graph,
     html.Div(id='temperature-display-value'),
 ])
 
