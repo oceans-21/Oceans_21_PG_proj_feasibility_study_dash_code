@@ -23,41 +23,108 @@ from dash.dependencies import Input, Output
 from app import app
 import pandas as pd
 import numpy as np
-
+import xarray as xr
 
 ## functions go here:
 ###############################################
-# you can put your own functions here:
-# ...
-def i_do_something(whatever_parameters,another_param):
+# open netcdf file:
+def open_netcdf(fileName, debug=False):
     """
-        Purpose: Fill this in.
+        Purpose: Open a file using xarray.
 
-        :param whatever_parameters: Fill this in.
-        :type whatever_parameters: str
-        :param another_param: make copies of the param/type for more arguments to the functions.
-        :type another_param: bool
+        :param fileName: The numpy array containg the latitude data.
+        :type fileName: str
+        :keyword debug: Boolean to print debug information.
+        :type debug: bool
 
-        :returns:  None -- Fill here if something is returned.
+        Returns:
+        (tuple): tuple containing:
+
+            data (str): The data from file as xarray object
 
         How to use this function
 
-        >>> i_do_something("hello",11)
-
-
-        .. note::
-
-            You can put a not here if you want.
-
+        >>> openNetcdf("theFile.nc")
         """
 
+    data = xr.open_dataset(fileName)
+    if debug: print("Opened netcdf data as xarray: ", data)
+    data.close()
+    return data
 
-    # please comment your codes as you code :-)
-    print(whatever_parameters,another_param)
+# get data from a variable from xarray datatype
+def get_variable(data, variableName, debug=False):
+    """
+        Purpose: get data using xarray.
 
-    return None
+        :param data: The xarray data.
+        :type data: float
+        :param variableName: The variable name wanted.
+        :type variableName: str
+        :keyword debug: Boolean to print debug information.
+        :type debug: bool
+
+        Returns:
+        (tuple): tuple containing:
+            data (str): The data from file as numpy object
+
+        How to use this function
+
+        >>> getVariable(data,"theVariable")
+        """
+
+    variableData = data[variableName].values
+    if debug: print("Extracted data from NetCDF: ", variableData)
+    if debug: print("Dimension of data: ", variableData.shape)
+
+    return variableData
 
 
+# get the temperature data:
+def get_temperature_data(debug=False):
+    # path to data:
+    path = pl.Path("support/data/tempSalineNEMO.nc")
+    # open data as xarray:
+    data = open_netcdf(path)
+    if debug: print(data)
+    # extract data: dimensions
+    temperature = get_variable(data,"votemper")
+    if debug: print(temperature)
+    return temperature
+
+
+# get the time data:
+def get_time_data(debug=False):
+    # path to data:
+    path = pl.Path("support/data/tempSalineNEMO.nc")
+    # open data as xarray:
+    data = open_netcdf(path)
+    if debug: print(data)
+    # extract data:
+    time = get_variable(data, "time_counter")
+    if debug: print(time)
+    # get todays date and make a forecast out of it
+    today = dt.datetime.today()
+    # generate a pandas series of dates and times
+    dates = pd.date_range(today, periods=len(time),freq="60min")
+    return dates
+
+
+# get the depth data:
+def get_depth_data(debug=False):
+    # path to data:
+    path = pl.Path("support/data/tempSalineNEMO.nc")
+    # open data as xarray:
+    data = open_netcdf(path)
+    if debug: print(data)
+    # extract data:
+    depth = get_variable(data, "deptht")
+    if debug: print(depth)
+    return depth
+
+# get_temperature_data(True)
+# print(len(get_time_data()))
+# print(get_time_data()[2])
 
 
 
@@ -82,8 +149,8 @@ header_text = html.H1('Temperature')
 
 # these are yours :-)
 # element 1
-the_graph = dcc.Graph(
-        # id='example-graph',
+temperature_graph = dcc.Graph(
+        id='temperature_graph',
         figure={
             'data': [
                 {'x': [0, 2, 3], 'y': [40, 1, 2],
@@ -94,14 +161,27 @@ the_graph = dcc.Graph(
         }
     )
 
-# element 2
-dropdown = dcc.Dropdown(
-        id='temperature-dropdown',
-        options=[
-            {'label': 'App 1 - {}'.format(i), 'value': i} for i in ['NYC', 'MTL', 'LA',"cat"]
-        ],value="hello"
-    )
 
+time_slider = dcc.Slider(
+    min=0,
+    max=len(get_time_data())-1,
+    value=0,
+    marks={ i:{'label': str(i), 'style': {'color': '#77b0b1'}} for i in range(len(get_time_data()))},
+    included=False
+)
+
+depth_slider = dcc.Slider(
+    min=0,
+    max=len(get_depth_data())-1,
+    value=0,
+    marks={i:{'label': str(i), 'style': {'color': '#77b0b1'}} for i in range(len(get_depth_data()))},
+    included=False,
+    vertical= True,
+    tooltip = {  "placement":"topLeft" }
+
+)
+
+# stopped here
 
 
 
@@ -109,23 +189,33 @@ dropdown = dcc.Dropdown(
 layout = html.Div([
     # header (leave alone):
     header_logo,
-    header_text,html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),html.Br(),
+    header_text, html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(),
 
     # Your components:
+    html.Div(temperature_graph,style={'width': '80%', 'display': 'inline-block'}),
+    html.Div([depth_slider],style={'width': '20%', 'height': '50vh', 'display': 'inline-block'}),
+    html.Div(time_slider,style={'width': '80%', 'display': 'inline-block'}),
+    # temperature_graph,
+    html.Br(),
+    html.Br(),
+    html.Br(),
+    html.Br(),
+    # time_slider,
+    html.Br(),
+    html.Br(),
+    html.Br(),
+    html.Br(),
+    # depth_slider,
 
-    the_graph,
-dropdown,
-the_graph,
-    html.Div(id='temperature-display-value'),
 ])
 
 
 # all call backs go here:
 # ...
 
-# callback to display what value chosen in dropdown
-@app.callback(
-    Output('temperature-display-value', 'children'),
-    [Input('temperature-dropdown', 'value')])
-def display_value(value):
-    return 'You have selected "{}"'.format(value)
+# # callback to display what value chosen in dropdown
+# @app.callback(
+#     Output('temperature-display-value', 'children'),
+#     [Input('temperature-dropdown', 'value')])
+# def display_value(value):
+#     return 'You have selected "{}"'.format(value)
