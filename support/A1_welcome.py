@@ -6,10 +6,10 @@
 .. moduleauthor:: Kirodh Boodhraj <kboodhraj@csir.co.za>
 
 TODO
-say it is demo data
-explain frequency of data
+*say it is demo data
+explain frequency of data/forecast
 Mention CHPC
-mention the approach
+mention the approach/method
 
 """
 
@@ -33,34 +33,7 @@ import numpy as np
 ## functions go here:
 ###############################################
 # you can put your own functions here:
-# ...
-def i_do_something(whatever_parameters,another_param):
-    """
-        Purpose: Fill this in.
 
-        :param whatever_parameters: Fill this in.
-        :type whatever_parameters: str
-        :param another_param: make copies of the param/type for more arguments to the functions.
-        :type another_param: bool
-
-        :returns:  None -- Fill here if something is returned.
-
-        How to use this function
-
-        >>> i_do_something("hello",11)
-
-
-        .. note::
-
-            You can put a not here if you want.
-
-        """
-
-
-    # please comment your codes as you code :-)
-    print(whatever_parameters,another_param)
-
-    return None
 
 
 
@@ -81,11 +54,36 @@ header_logo = html.A([html.Img(id="logo",src=app.get_asset_url('oceans21logo_sma
                 })],href="https://www.csir.co.za",target="_blank")
 
 
-header_heading = html.H1('Oceans 21 Home page',id="the_title")
+header_heading = html.H1(id="the_title",children=['Oceans 21 Home page'])
+
+introduction = html.Div(id="introduction", children=[
+    "A feasibility study is currently underway for the Oceans 21 project. Oceans 21 aims to create an ocean forecast "
+    "using machine learning techniques not applied to this field in the conventional manner previously. The methodology "
+    "is explained below. This web application displays historical data. Please do not use it for realtime decision "
+    "making."])
+
+methodology_heading = html.H4(id="methodology_heading",children=["Methodology:"])
+methodology_body = dcc.Markdown(id="methodology", children=[
+'''
+1. The methodology employed will be to apply machine learning to the ocean model input data, i.e. the surface forcing data from climate reanalyses.
+2. This will provide a forecast of the ocean input data, which can further be used in other applications.
+3. The forecasted ocean input data will be used in the ocean model to produce an ocean forecast.
+'''])
+
+
+hazards_heading = html.H4(id="hazards_heading",children=["Challenges:"])
+hazards = dcc.Markdown(id="hazards", children=[
+'''The following challenges are recognised:
+- Various errors associated with the ocean input data, forcasted ocean input data and ocean forecast data.
+- Computational running time needed is costly. The Centre for Higher Performance Computing (CHPC) will be used for this undertaking.
+- Funding and administration. 
+'''])
+
 
 # this is interesting, mark down needs to go against the wall here, if indented, it will not work!
+ocean_forecast_measures_heading = html.H4(id="forecastfun_heading",children=["Ocean forecast measures and possible uses:"])
 ocean_forecast_measures = dcc.Markdown(
-'''There are various ocean forecast measures namely
+'''This list is not exhaustive:
 - Temperature
 - Salinity
 - Currents
@@ -96,7 +94,7 @@ ocean_forecast_measures = dcc.Markdown(
 - Particle Tracking
 ''')
 
-
+# stopped here!
 
 ## this is where all your elements come together:
 layout = html.Div(id="welcomePages",children=[
@@ -104,9 +102,17 @@ layout = html.Div(id="welcomePages",children=[
     header_heading,
     html.Br(),
     html.Br(),
-    html.Div(id="text",children=["This is a platform for viewing a vision for an ocean forecast. "
-                                 "This web application does not contain up to date data but displays historical data."]),
+    introduction,
+    html.Br(),
+    methodology_heading,
+    methodology_body,
+    html.Br(),
+    hazards_heading,
+    hazards,
+    html.Br(),
+    ocean_forecast_measures_heading,
     ocean_forecast_measures,
+    html.Br(),
     html.Div(id="text1",children=["Please use these buttons below to navigate to the appropriate pages:"]),
 
 ])

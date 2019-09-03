@@ -166,9 +166,7 @@ body {
     background-size: cover;
 } */
 
-/* .the_title{ */
-  /* color: yellow; */
-/* } */
+
 
 
 /* Typography
@@ -193,6 +191,12 @@ h1 {
   letter-spacing: 2px;
 }
 
+/* h3 { */
+  /* font-family: "Impact", fantasy; */
+  /* color: #0e25ca; */
+  /* text-align: left; */
+  /* letter-spacing: 2px; */
+/* } */
 
 p {
   margin-top: 0; }
