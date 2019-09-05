@@ -206,6 +206,7 @@ intro = html.Div(["This page displays forecasted hourly temperature data. Use th
                   "on the graph."])
 
 # layout for main temperature graph:
+# sort out colourbar:
 # for mapbox layout
 layout = dict(
     autosize=True,
@@ -230,13 +231,13 @@ layout = dict(
 # print(latitude[:,0])
 trace = [dict(
             type="scattermapbox",
-            lon=flatten(longitude[0,:],latitude[:,0],temp_data[0,-1,:,:])["lon"],#[30,31,32],#longitude[0,:],
-            lat=flatten(longitude[0,:],latitude[:,0],temp_data[0,-1,:,:])["lat"],#[-30,-31,-32],#latitude[:,0],
-            # text="hello",
+            lon=flatten(longitude[0,:],latitude[:,0],temp_data[0,0,:,:])["lon"],#[30,31,32],#longitude[0,:],
+            lat=flatten(longitude[0,:],latitude[:,0],temp_data[0,0,:,:])["lat"],#[-30,-31,-32],#latitude[:,0],
+            text=[format(j,".2f")+" "+ u'\N{DEGREE SIGN}'+"C" for j in flatten(longitude[0,:],latitude[:,0],temp_data[0,0,:,:])["data"]],
             # z=flatten(longitude[0,:],latitude[:,0],temp_data[0,-3,:,:])["data"],#[2,3,4],#temp_data[0,0,:,:],
             # name="the name",
-            marker=dict(size=4, opacity=0.6, cmin=0,cmax=37,
-                color=flatten(longitude[0,:],latitude[:,0],temp_data[0,-1,:,:])["data"],
+            marker=dict(size=10, opacity=0.6, cmin=0,cmax=37,
+                color=flatten(longitude[0,:],latitude[:,0],temp_data[0,0,:,:])["data"],
                 colorscale="Jet", #Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis,Cividis
                 colorbar=dict(
                     thickness= 10,
@@ -263,6 +264,7 @@ temperature_graph = dcc.Graph(
 
 
 time_slider = dcc.Slider(
+    id="tempTimeSlider",
     min=0,
     max=len(get_time_data())-1,
     value=0,
@@ -276,6 +278,7 @@ time_slider = dcc.Slider(
 )
 
 depth_slider = dcc.Slider(
+    id="tempDepthSlider",
     min=0,
     max=len(get_depth_data())-1,
     value=len(get_depth_data())-1,
@@ -300,7 +303,7 @@ themometer = daq.Thermometer(
     # style={'height': '100vh'},
     color = " #f83a3a",
     showCurrentValue=True,
-    units="C",
+    units=u'\N{DEGREE SIGN}'+"C",
     # size= '25%'#300,
     # labelPosition = "top",
     # label="hello"
@@ -308,10 +311,10 @@ themometer = daq.Thermometer(
 
 # a block with all the required indicators:
 indicators = html.Div(id="tempIndicators",className="tempIndicators",children=[
-    html.Div(id="surfaceMaxT",children=["Surface Maximum Temperature = 0.0 deg C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
-    html.Div(id="surfaceMinT", children=["Surface Minimum Temperature = 0.0 deg C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
-    html.Div(id="surfaceAvgT", children=["Surface Average Temperature = 0.0 deg C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
-    html.Div(id="depthAvgT", children=["Depth Average Temperature = 0.0 deg C"],style={'padding-left':"5vw",'padding-top':"5vh",'padding-bottom':"5vh"})
+    html.Div(id="surfaceMaxT",children=["Surface Maximum Temperature = NaN "+u'\N{DEGREE SIGN}'+" C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
+    html.Div(id="surfaceMinT", children=["Surface Minimum Temperature = NaN "+u'\N{DEGREE SIGN}'+" C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
+    html.Div(id="surfaceAvgT", children=["Surface Average Temperature = NaN "+u'\N{DEGREE SIGN}'+" C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
+    html.Div(id="depthAvgT", children=["Depth Average Temperature = NaN "+u'\N{DEGREE SIGN}'+" C"],style={'padding-left':"5vw",'padding-top':"5vh",'padding-bottom':"5vh"})
     # html.Div(id="surfaceMaxT", children=["Surface Maximum Temperature = 0.0 deg C"]),
     # html.Div(id="surfaceMaxT", children=["Surface Maximum Temperature = 0.0 deg C"])
 ])
@@ -321,10 +324,10 @@ forecast_temperature_line_graph = dcc.Graph(
     id='temperature_forecast_line_graph',
     figure={
         'data': [
-            {'x': [0, 2, 3], 'y': [40, 1, 2],
-             'type': 'bar', 'name': 'SF'},
-            {'x': [0, 2, 3], 'y': [2, 4, 5],
-             'type': 'bar', 'name': u'Montréal'},
+            {'x': [0, 1, 2], 'y': [0, 0, 0],
+             'type': 'line', 'name': 'Temperature forecast'},
+            {'x': [0, 1, 2], 'y': [0, 0, 0],
+             'type': 'line', 'name': 'Average temperature'},
         ]
     }
 )
@@ -334,10 +337,10 @@ depth_temperature_line_graph = dcc.Graph(
     id='temperature_depth_line_graph',
     figure={
         'data': [
-            {'x': [0, 2, 3], 'y': [40, 1, 2],
-             'type': 'bar', 'name': 'SF'},
-            {'x': [0, 2, 3], 'y': [2, 4, 5],
-             'type': 'bar', 'name': u'Montréal'},
+            {'x': [0, 1, 2], 'y': [0, 0, 0],
+             'type': 'line', 'name': 'Depth profile'},
+            {'x': [0, 1, 2], 'y': [0, 0, 0],
+             'type': 'line', 'name': 'Average temperature'},
         ]
     }
 )
@@ -386,16 +389,91 @@ layout = html.Div([
 
 # all call backs go here:
 # ...
+# two call backs needed, one for the sliders and one for clicking the graph:
 
-# # callback to display what value chosen in dropdown
-# @app.callback(
-#     Output('temperature-display-value', 'children'),
-#     [Input('temperature-dropdown', 'value')])
-# def display_value(value):
-#     return 'You have selected "{}"'.format(value)
+# for sliders:
+@app.callback(
+    [Output('surfaceMaxT', 'children'),Output('surfaceMinT', 'children'),Output('surfaceAvgT', 'children'),Output('temperature_graph','figure')],
+    [Input('tempDepthSlider', 'value'),Input('tempTimeSlider', 'value')])
+def display_click_data(tempDepthSliderValue,tempTimeSliderValue):
+    # print(tempDepthSliderValue,tempTimeSliderValue,depth_data)
+    # print(tempDepthSliderValue)
 
-# @app.callback(
-#     Output('themometer', 'label'),
-#     [Input('themometer', 'value')])
-# def display_value(value):
-#     return 'You have selected "{}"'.format(value)
+    # invert the  depth index because I inverted it when I changed the labels around, i.e. max depth -1 - current slider value, -1 for a offset due to number of elements present and python counting from 0
+    tempDepthSliderValue = len(depth_data) - 1 - tempDepthSliderValue
+    # print(tempDepthSliderValue)
+    # first get the data: data dimensions: time depth lat lon
+    data_layer = temp_data[tempTimeSliderValue,tempDepthSliderValue,:,:]
+    # print(data_layer)
+
+    # update components one by one
+    # 1) surface maximum temperature
+    surface_maximum_temperature = np.nanmax(data_layer)
+    surface_maximum_temperature = "Surface Maximum Temperature = "+format(surface_maximum_temperature,".3f") + " "+ u'\N{DEGREE SIGN}' + "C"
+    # print("temp",surface_maximum_temperature)
+
+    # 2) surface minimum temperature
+    surface_minimum_temperature = np.nanmin(data_layer[np.nonzero(data_layer)])
+    surface_minimum_temperature = "Surface Minimum Temperature = "+format(surface_minimum_temperature,".3f") + " "+ u'\N{DEGREE SIGN}' + "C"
+
+
+    # 3) surface average temperature:
+    surface_average_temperature = np.nanmean(data_layer)
+    surface_average_temperature = "Surface Average Temperature = "+format(surface_average_temperature ,".2f") + " "+ u'\N{DEGREE SIGN}' + "C"
+
+    # 4) the graph/figure:
+    # layout for main temperature graph:
+    # for mapbox layout
+    layout = dict(
+        autosize=True,
+        automargin=True,
+        margin=dict(l=30, r=30, b=20, t=40),
+        hovermode="closest",
+        hoverinfo='all',
+        plot_bgcolor="#F9F9F9",
+        paper_bgcolor="#F9F9F9",
+        legend=dict(font=dict(size=10), orientation="h"),
+        title="Scroll to zoom. Double click to reset view",
+        mapbox=dict(
+            accesstoken=mapbox_access_token,
+            style="light",  # streets, light dark satellite outdoors satellite-streets open-street-map
+            center=dict(lon=25, lat=-30),
+            zoom=3,
+        ),
+    )
+    # update data:
+    trace = [dict(
+        type="scattermapbox",
+        lon=flatten(longitude[0, :], latitude[:, 0], data_layer)["lon"],
+        lat=flatten(longitude[0, :], latitude[:, 0], data_layer)["lat"],
+        text=[format(j,".2f")+" "+ u'\N{DEGREE SIGN}'+"C" for j in flatten(longitude[0, :], latitude[:, 0], data_layer)["data"]],
+        marker=dict(size=10, opacity=0.6, cmin=0, cmax=37,
+                    color=flatten(longitude[0, :], latitude[:, 0], data_layer)["data"],
+                    colorscale="Jet",# Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis,Cividis
+                    colorbar=dict(
+                        thickness=10,
+                        titleside='right',
+                        outlinecolor='rgba(68,68,68,0)',
+                        ticks='outside',
+                        ticklen=3,
+                        shoticksuffix='last'
+                    ))
+    )]
+
+    # create the figure:
+    figure = {
+        'data': trace,
+        'layout': layout
+    }
+
+    return [surface_maximum_temperature,surface_minimum_temperature,surface_average_temperature,figure]
+
+
+# for profile graphs, thermometer and depth average:
+@app.callback(
+    [Output('surfaceMaxT', 'children'),Output('surfaceMinT', 'children'),Output('surfaceAvgT', 'children'),Output('temperature_graph','figure')],
+    [Input('tempDepthSlider', 'value'),Input('tempTimeSlider', 'value')])
+def display_click_data(tempDepthSliderValue,tempTimeSliderValue):
+    tempDepthSliderValue
+    tempTimeSliderValue
+    return [None,None,None,None]
