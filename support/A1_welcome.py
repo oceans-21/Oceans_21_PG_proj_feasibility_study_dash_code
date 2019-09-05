@@ -56,11 +56,12 @@ header_logo = html.A([html.Img(id="logo",src=app.get_asset_url('oceans21logo_sma
 
 header_heading = html.H1(id="the_title",children=['Oceans 21 Home page'])
 
-introduction = html.Div(id="introduction", children=[
+introduction = html.Div(id="introduction", className="introductionWelcomeText",
+                        children=[
     "A feasibility study is currently underway for the Oceans 21 project. Oceans 21 aims to create an ocean forecast "
-    "using machine learning techniques not applied to this field in the conventional manner previously. The methodology "
-    "is explained below. This web application displays historical data. Please do not use it for realtime decision "
-    "making."])
+    "using machine learning techniques not applied to this field previously. The methodology "
+    "is explained below. This web application demo displays the concept of having a ocean forecast and its various uses. "
+    "The data displayed is historical data so please do not use it for realtime decision making."])
 
 methodology_heading = html.H4(id="methodology_heading",children=["Methodology:"])
 methodology_body = dcc.Markdown(id="methodology", children=[

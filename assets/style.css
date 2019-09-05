@@ -346,6 +346,13 @@ input[type="button"].button-primary:focus {
   border-radius: 500px; /*4px;*/
 }
 
+/* introduction text
+-------------------------------------------------- */
+.introductionWelcomeText {
+  text-align: justify;
+}
+
+
 
 /* Sliders
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -362,6 +369,7 @@ input[type="button"].button-primary:focus {
   background-color: black;
   border-color: grey;
 }
+
 
 /* .rc.slider-handle:hover {
   border-color: red;
