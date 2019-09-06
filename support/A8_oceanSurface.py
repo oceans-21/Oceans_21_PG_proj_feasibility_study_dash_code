@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-.. module:: Ocean_Surface
+.. module:: Ocean_surface
     :platform: Windows 7, Python 3.7.
     :synopsis: This module holds the functions developed by Dr. Nicolene Botha and Melise Steyn.
 .. moduleauthor:: Kirodh Boodhraj <kboodhraj@csir.co.za>

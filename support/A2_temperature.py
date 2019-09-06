@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-.. module:: Chris
+.. module:: Temperature
     :platform: Windows 7, Python 3.7.
     :synopsis: This module holds the functions developed by Kirodh Boodhraj.
 .. moduleauthor:: Kirodh Boodhraj <kboodhraj@csir.co.za>
@@ -19,7 +19,7 @@ import dash_html_components as html
 import dash_core_components as dcc
 import dash_daq as daq
 import dash_table as tab
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from app import app
 import pandas as pd
 import numpy as np
@@ -163,6 +163,26 @@ def flatten(lon,lat,data,debug=False):
 
     return pd.DataFrame(the_array,columns=["lat","lon","data"])
 
+# function to extract the depth and forecast profile given a lat/lon:
+def get_depth_and_forecast_temperature_data(lonPoint,latPoint,lonData,latData,temperatureData,depthIndex,timeIndex,debug=False):
+    # this function obtains the depth profile at a point and forecast at a point given a latitude and longitude point:
+    # first get the indexes of lat and lon that need to be pulled out:
+    latIndex = np.nanargmin(np.abs(latData-latPoint))
+    closestLat = latData[latIndex]
+    lonIndex = np.nanargmin(np.abs(lonData-lonPoint))
+    closestLon = lonData[lonIndex]
+    if debug: print(closestLat,closestLon)
+
+    # now get the temperature data points:
+    # for depth profile:
+    depthProfile = temperatureData[timeIndex,:,latIndex,lonIndex]
+    # for forecast profile:
+    forecastProfile = temperatureData[:,depthIndex,latIndex,lonIndex]
+    # return the values
+    if debug: print(depthProfile,forecastProfile)
+    return depthProfile,forecastProfile
+
+
 
 
 # all data:
@@ -201,7 +221,7 @@ header_text = html.H1('Temperature')
 
 # these are yours :-)
 # intro text:
-intro = html.Div(["This page displays forecasted hourly temperature data. Use the sliders to change between the various "
+intro = html.Div(["This page displays forecasted hourly temperature data ("+u'\N{DEGREE SIGN}'+"C). Use the sliders to change between the various "
                   "depths and time steps. The resulting temperature profiles will be displayed for the point chosen "
                   "on the graph."])
 
@@ -311,10 +331,10 @@ themometer = daq.Thermometer(
 
 # a block with all the required indicators:
 indicators = html.Div(id="tempIndicators",className="tempIndicators",children=[
-    html.Div(id="surfaceMaxT",children=["Surface Maximum Temperature = NaN "+u'\N{DEGREE SIGN}'+" C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
-    html.Div(id="surfaceMinT", children=["Surface Minimum Temperature = NaN "+u'\N{DEGREE SIGN}'+" C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
-    html.Div(id="surfaceAvgT", children=["Surface Average Temperature = NaN "+u'\N{DEGREE SIGN}'+" C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
-    html.Div(id="depthAvgT", children=["Depth Average Temperature = NaN "+u'\N{DEGREE SIGN}'+" C"],style={'padding-left':"5vw",'padding-top':"5vh",'padding-bottom':"5vh"})
+    html.Div(id="surfaceMaxT",children=["Surface Maximum Temperature = NaN "+u'\N{DEGREE SIGN}'+"C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
+    html.Div(id="surfaceMinT", children=["Surface Minimum Temperature = NaN "+u'\N{DEGREE SIGN}'+"C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
+    html.Div(id="surfaceAvgT", children=["Surface Average Temperature = NaN "+u'\N{DEGREE SIGN}'+"C"],style={'padding-left':"5vw",'padding-top':"5vh"}),
+    html.Div(id="depthAvgT", children=["Depth Average Temperature = NaN "+u'\N{DEGREE SIGN}'+"C"],style={'padding-left':"5vw",'padding-top':"5vh",'padding-bottom':"5vh"})
     # html.Div(id="surfaceMaxT", children=["Surface Maximum Temperature = 0.0 deg C"]),
     # html.Div(id="surfaceMaxT", children=["Surface Maximum Temperature = 0.0 deg C"])
 ])
@@ -374,8 +394,8 @@ layout = html.Div([
     # line graph of forecast at the point selected,
     html.Br(),html.Br(),html.Br(),html.Br(), # for spacing
     html.Div(children=[
-        html.Div(forecast_temperature_line_graph, style={'width': '50%', 'display': 'inline-block'}),
-        html.Div(depth_temperature_line_graph, style={'width': '50%', 'display': 'inline-block'}),
+        html.Div(forecast_temperature_line_graph, style={'width': '30%', 'display': 'inline-block'}),
+        html.Div(depth_temperature_line_graph, style={'width': '70%', 'display': 'inline-block'}),
     ]),
 
     # line graph of depth profile at the point,
@@ -471,9 +491,129 @@ def display_click_data(tempDepthSliderValue,tempTimeSliderValue):
 
 # for profile graphs, thermometer and depth average:
 @app.callback(
-    [Output('surfaceMaxT', 'children'),Output('surfaceMinT', 'children'),Output('surfaceAvgT', 'children'),Output('temperature_graph','figure')],
-    [Input('tempDepthSlider', 'value'),Input('tempTimeSlider', 'value')])
-def display_click_data(tempDepthSliderValue,tempTimeSliderValue):
-    tempDepthSliderValue
-    tempTimeSliderValue
-    return [None,None,None,None]
+    # [Output('depthAvgT', 'children'),Output('thermometer', 'value'),Output('temperature_forecast_line_graph', 'figure'),Output('temperature_depth_line_graph','figure')],
+    [Output('depthAvgT', 'children'),Output('thermometer', 'value'),Output('temperature_forecast_line_graph', 'figure'),Output('temperature_depth_line_graph','figure')],
+    # [Input('temperature_graph', 'clickData'),Input('tempTimeSlider', 'value')])
+    [Input('temperature_graph', 'clickData'),Input('tempDepthSlider', 'value'),Input('tempTimeSlider', 'value')],
+    [State('depthAvgT', 'children'),State('thermometer', 'value'),State('temperature_forecast_line_graph', 'figure'),State('temperature_depth_line_graph','figure')])
+def display_click_data(click_data,tempDepthSliderValue,tempTimeSliderValue,depth_average_text_state,thermometer_state,depth_graph_state,forcast_graph_state):
+    # this callback generates the line graphs and thermometer and depth averaged temperature value
+    if click_data is not None:
+        # print(tempTimeSliderValue, tempDepthSliderValue)
+        # invert the  depth index because I inverted it when I changed the labels around, i.e. max depth -1 - current slider value, -1 for a offset due to number of elements present and python counting from 0
+        tempDepthSliderValue = len(depth_data) - 1 - tempDepthSliderValue
+
+        # print(click_data)
+        # print(tempTimeSliderValue,tempDepthSliderValue)
+
+        # get the temperature from the clicked temperature value for thermometer:
+        the_current_temperature = (click_data.get("points")[0]).get("marker.color")
+        # get the lat/lon values
+        the_current_latitude = (click_data.get("points")[0]).get("lat")
+        the_current_longitude = (click_data.get("points")[0]).get("lon")
+        # print(the_current_temperature)
+
+        # get the temperature profiles:
+        depth_profile,forecast_profile = get_depth_and_forecast_temperature_data(the_current_longitude, the_current_latitude, longitude[0, :], latitude[:, 0], temp_data,tempDepthSliderValue,tempTimeSliderValue)
+
+        # get the depth average value for display:
+        depth_averaged_temperature = np.nanmean(depth_profile)
+        depth_averaged_temperature_text = "Depth Average Temperature = "+format(depth_averaged_temperature,".2f")+" "+u'\N{DEGREE SIGN}'+" C"
+
+
+        # processing for figures:
+        # data
+        depth_graph_data = [
+                {'x': depth_profile, 'y': depth_data,
+                 'type': 'line',
+                 'name': 'Depth temperature profile',
+                 'marker':dict(size=10, opacity=0.6)
+                 },
+                {'x': [depth_averaged_temperature for i in range(len(depth_data))], 'y': depth_data,
+                 'type': 'line',
+                 'mode':"lines",
+                 'name': 'Average temperature = '+format(depth_averaged_temperature,".2f")+" "+u'\N{DEGREE SIGN}'+"C",
+                 # 'marker':dict(size=10, opacity=1)
+                 }
+            ]
+        forecast_graph_data = [
+            {'x': get_time_data(), 'y': forecast_profile,
+             'type': 'line',
+             'name': 'Depth temperature profile',
+             'marker': dict(size=10, opacity=0.6)
+             },
+            {'x': get_time_data(), 'y': [np.nanmean(forecast_profile) for i in range(len(get_time_data()))],
+             'type': 'line',
+             'mode': "lines",
+             'name': 'Average temperature = ' + format(np.nanmean(forecast_profile),".2f") + " " + u'\N{DEGREE SIGN}' + "C",
+             # 'marker':dict(size=10, opacity=1)
+             }
+            ]
+
+        # layouts:
+        depth_graph_layout = {
+            'title': dict(
+            text="Temperature depth profile",
+            # font=dict(
+            #     family="Courier New, monospace",
+            #     size=18,
+            #     color="#7f7f7f")
+            ),
+            'yaxis':dict(
+            title="Depth (m)",
+            font=dict(
+                family="Courier New, monospace",
+                size=18,
+                color="#7f7f7f"
+            ),
+            autorange="reversed"),
+            'xaxis': dict(
+            title="Temperature ("+u'\N{DEGREE SIGN}'+"C)",
+            font=dict(
+                family="Courier New, monospace",
+                size=18,
+                color="#7f7f7f"
+            )),
+            # 'legend_orientation' : "h",
+            'legend' : dict(x=-.1, y=-0.5)
+        }
+        forecast_graph_layout = {
+            'title': dict(
+            text="Temperature point forecast profile",
+            # font=dict(
+            #     family="Courier New, monospace",
+            #     size=18,
+            #     color="#7f7f7f")
+            ),
+            'yaxis': dict(
+                title="Temperature (" + u'\N{DEGREE SIGN}' + "C)",
+                font=dict(
+                    family="Courier New, monospace",
+                    size=18,
+                    color="#7f7f7f"
+                ),
+                autorange="reversed"),
+            'xaxis': dict(
+                title="Time",
+                font=dict(
+                    family="Courier New, monospace",
+                    size=18,
+                    color="#7f7f7f"
+                )),
+            'legend': dict(x=-.1, y=-0.5)
+        }
+
+        # make the actual figures:
+        figure_depth = {
+            'data': depth_graph_data,
+            'layout': depth_graph_layout}
+        figure_forecast = {
+            'data': forecast_graph_data,
+            'layout': forecast_graph_layout}
+
+
+        # return the final values:
+        return [depth_averaged_temperature_text,the_current_temperature,figure_depth,figure_forecast]
+    else:
+        # return original state if no one has clicked:
+        return depth_average_text_state,thermometer_state,depth_graph_state,forcast_graph_state

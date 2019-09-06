@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-.. module:: Particle_Tracking
+.. module:: Particle_tracking
     :platform: Windows 7, Python 3.7.
     :synopsis: This module holds the functions developed by Kirodh Boodhraj.
 .. moduleauthor:: Kirodh Boodhraj <kboodhraj@csir.co.za>

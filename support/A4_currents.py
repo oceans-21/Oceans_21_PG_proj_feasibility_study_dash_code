@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-.. module:: Chris
+.. module:: Currents
     :platform: Windows 7, Python 3.7.
     :synopsis: This module holds the functions developed by Chris Mahlathi.
 .. moduleauthor:: Kirodh Boodhraj <kboodhraj@csir.co.za>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-.. module:: Chris
+.. module:: Waves
     :platform: Windows 7, Python 3.7.
     :synopsis: This module holds the functions developed by Gert Wessels and Dr. Kobie Smit.
 .. moduleauthor:: Kirodh Boodhraj <kboodhraj@csir.co.za>
