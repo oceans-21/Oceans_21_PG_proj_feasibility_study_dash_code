@@ -232,7 +232,6 @@ def plot_output(hour,var):
     plt.colorbar(im, cax=cax)#, orientation="vertical", pad=0.1)
     temp_image = os.path.join(path, 'temp.png')
     plt.savefig(temp_image)
-    plt.savefig('temp.png')
     plt.cla()
     plt.clf()
     plt.close()
