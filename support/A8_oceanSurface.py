@@ -32,7 +32,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import os
 
-
+import matplotlib
 ## functions go here:
 
 
@@ -133,11 +133,11 @@ text = html.Div([dcc.Markdown(children=markdown_text)])
 
 
 spacer = html.Div('', style={'padding': 10})
-    
-    
+
+
 
 dropdown = html.Div([html.Label('Ocean parameter',style={'marginLeft': 1}),
-                     html.Div('',style={'padding':15}), 
+                     html.Div('',style={'padding':15}),
                      dcc.Dropdown(id = 'variable',
                                   style={'height': '30px', 'width': '200px','marginBottom': '3em'},
                                   options=[
@@ -146,20 +146,20 @@ dropdown = html.Div([html.Label('Ocean parameter',style={'marginLeft': 1}),
                                           {'label': 'Salinity', 'value': 'salinity', 'disabled': True},
                                           {'label': 'Variable 4', 'value': 'var4', 'disabled': True},
                                           {'label': 'Variable 5', 'value': 'var5', 'disabled': True}
-                                          
+
                                           ],
                                   value='Temperature',
                                   )], style={'width': '49%', 'display': 'inline-block','vertical-align': 'top'})
 
 
-slider = html.Div([html.Label('Forecasting timestep of ocean parameter'),    
-                   html.Div('',style={'padding':20}),     
+slider = html.Div([html.Label('Forecasting timestep of ocean parameter'),
+                   html.Div('',style={'padding':20}),
                    html.Div([
                            daq.Slider(
                                    id='my-daq-slider-ex',
                                    size=400,
-                                   min=1, 
-                                   max=72, 
+                                   min=1,
+                                   max=72,
                                    value=4,
                                    handleLabel={"showCurrentValue": True,"label": "HOUR"}),
                            html.Div(id='slider-output')
@@ -171,8 +171,8 @@ slider = html.Div([html.Label('Forecasting timestep of ocean parameter'),
 graph = html.Div([
                 html.Img(id='image'),
                 ], style={'marginLeft':250})
-    
-    
+
+
 
 ## this is where all your elements come together:
 layout = html.Div([
@@ -212,8 +212,8 @@ def plot_output(hour,var):
     selected_var = os.path.join(path, var_array)
     df = np.load(selected_var)
     f = df[int(hour)-1]
-    m = Basemap(projection='cyl', llcrnrlon=xmin,llcrnrlat=ymin,urcrnrlon=xmax,urcrnrlat=ymax,
-                resolution='l')
+    matplotlib.use('Agg')
+    m = Basemap(projection='cyl', llcrnrlon=xmin,llcrnrlat=ymin,urcrnrlon=xmax,urcrnrlat=ymax,resolution='l')
     m.drawcoastlines()
     # add intensities (currently normalised but will be fixed - eventually)
     parallels = np.arange(-80.,10,5.)
@@ -225,19 +225,20 @@ def plot_output(hour,var):
     # add all the bells and whistles
     im = m.imshow(f[::-1],extent=[np.min(x),np.max(x),np.min(y),np.max(y)])
     plt.title('Graphical representation of ' + str(var) + ' for a ' + str(hour) + ' hour forecast\n\n' )
-    #plt.colorbar(im, orientation="vertical", pad=0.1)
+    # plt.colorbar(im, orientation="vertical", pad=0.1)
     ax = plt.gca()
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="5%", pad=0.5)
     plt.colorbar(im, cax=cax)#, orientation="vertical", pad=0.1)
     temp_image = os.path.join(path, 'temp.png')
+    print("temp: image",temp_image)
     plt.savefig(temp_image)
     plt.cla()
     plt.clf()
     plt.close()
-    #image_filename = 'temp.png' # replace with your own image
+    # image_filename = 'temp.png' # replace with your own image
     encoded_image = base64.b64encode(open(temp_image, 'rb').read())
-    src='data:image/png;base64,{}'.format(encoded_image)
+    src='data:image/png;base64,{}'.format(encoded_image.decode())
     return src
 
 
