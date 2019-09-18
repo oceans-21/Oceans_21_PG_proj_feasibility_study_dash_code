@@ -31,7 +31,7 @@ import base64
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import os
-
+import plotly.graph_objs as go
 import matplotlib
 ## functions go here:
 
@@ -47,21 +47,34 @@ print(Longitude)
 
 ## This coordinate jumble will be fixed when the 'real' area is decided and
 ## incorporated
-x_lon = np.load(Longitude) # want ~10 tot ~35 #x
-lon = x_lon[50:260]
-lon = lon[::-1]
-x = lon[112:212]
+x_lon = np.load(Longitude)
+#x_lon = np.load('Longetude.npy') # want ~10 tot ~35 #x
+lont = x_lon[48:258]
+lont = lont[::-1]
+x = lont[110:212]
 #x = lon[20:120]
 xmin = np.min(x)
 xmax = np.max(x)
+
 y_lat = np.load(Latitude) #want -40 to -30  #x
+#y_lat = np.load('Lattitude.npy') #want -40 to -30  #x
 y_lat = y_lat[::-1]
-lat = y_lat[200-14:350-14]
-y = lat[20:90]
+latt = y_lat[200-14:350-14]
+y = latt[20:90]
 #y = lat[20:120]
 ymin = np.min(y)
 ymax = np.max(y)
+# For mapbox
+Xg = list(x.flatten())
+Yg = list(y.flatten())
+Xg, Yg = np.meshgrid(Xg, Yg)
+Lon = Xg.ravel('A')
+Lat = Yg.ravel('A')
+df = pd.DataFrame(np.zeros((len(Lon), 2)),columns=['lat', 'lon'])
+df['lat'] = Lat
+df['lon'] = Lon
 
+mapbox_access_token = "pk.eyJ1Ijoia2lyb2RoIiwiYSI6ImNrMDVjaWY0ZzBqaXAzbXFvenp3OWVpd2MifQ.apsaN8lTiMfqgsOArDA5Xg" # public
 
 ''' markdown texts '''
 markdown_text = '''
@@ -168,10 +181,12 @@ slider = html.Div([html.Label('Forecasting timestep of ocean parameter'),
 
 
 #    html.Label(id='message1',style={'marginLeft':80,'marginBottom':-2}),#, children='Please select ocean state variable and forecasted hour to view.'),
-graph = html.Div([
+image = html.Div([
                 html.Img(id='image'),
                 ], style={'marginLeft':250})
-
+    
+    
+graph = html.Div([dcc.Graph(id='map')], style={'marginLeft':200})
 
 
 ## this is where all your elements come together:
@@ -186,6 +201,8 @@ layout = html.Div([
     spacer,
     dropdown,
     slider,
+    image,
+    spacer,
     graph,
     spacer,
     html.Div(id='surface-display-value'),
@@ -210,8 +227,8 @@ def update_output(value):
 def plot_output(hour,var):
     var_array = str(var)+'.npy'
     selected_var = os.path.join(path, var_array)
-    df = np.load(selected_var)
-    f = df[int(hour)-1]
+    data = np.load(selected_var)
+    f = data[int(hour)-1]
     matplotlib.use('Agg')
     m = Basemap(projection='cyl', llcrnrlon=xmin,llcrnrlat=ymin,urcrnrlon=xmax,urcrnrlat=ymax,resolution='l')
     m.drawcoastlines()
@@ -242,3 +259,46 @@ def plot_output(hour,var):
     return src
 
 
+@app.callback(
+    dash.dependencies.Output('map', 'figure'),
+    [dash.dependencies.Input('my-daq-slider-ex', 'value'),
+    dash.dependencies.Input('variable', 'value')])
+def plot_output_test_mapbox(hour,var):
+    var_array = str(var)+'.npy'
+    selected_var = os.path.join(path, var_array)
+    data = np.load(selected_var)
+    #data = np.load(var_array)
+    #d=data[::-1]
+    h = data[int(hour)-1].ravel('A')
+    lt = df['lat'][::-1]
+    ln = df['lon'][::-1]
+    return {
+            'data': [
+                go.Scattermapbox(
+                    lat = lt,
+                    lon = ln,
+                    mode = 'markers',
+                    marker = dict(size=9, 
+                                  opacity=0.7, 
+                                  cmin=np.min(h), 
+                                  cmax=np.max(h),
+                                  color=h,
+                                  colorbar=dict(title='colourbar'),
+                                  colorscale='Viridis'
+                                  ),
+                    text=np.round(h,2))
+                    ],
+            'layout': go.Layout(
+                    margin = dict(l=30, r=20, t=0, b=0),
+                    width = 750,
+                    height = 550,
+                    hovermode = 'closest',
+                    mapbox = dict(
+                            accesstoken = mapbox_access_token,
+                            center=dict(lon=25, lat=-30),
+                            pitch=0,
+                            zoom=4
+                            )
+                        )}
+                    
+                    
