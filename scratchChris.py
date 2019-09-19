@@ -15,8 +15,8 @@ app.layout = html.Div([
     html.Spacer("  "),
     # dcc.Link(html.Button("Salinity"), href='/support/A3_salinity', className="salinity"),
     # html.Spacer("  "),
-    # dcc.Link(html.Button("Currents"), href='/support/A4_currents', className="currents"),
-    # html.Spacer("  "),
+    dcc.Link(html.Button("Currents"), href='/support/A4_currents', className="currents"),
+    html.Spacer("  "),
     # dcc.Link(html.Button("Energy"), href='/support/A5_energy', className="energy"),
     # html.Spacer("  "),
     # dcc.Link(html.Button("Waves"), href='/support/A6_waves', className="waves"),
@@ -40,8 +40,8 @@ def display_page(pathname):
         return A2_temperature.layout
     # elif pathname == '/support/A3_salinity':
     #     return A3_salinity.layout
-    # elif pathname == '/support/A4_currents':
-    #     return A4_currents.layout
+    elif pathname == '/support/A4_currents':
+        return A4_currents.layout
     # elif pathname == '/support/A5_energy':
     #     return A5_energy.layout
     # elif pathname == '/support/A6_waves':
