@@ -50,6 +50,8 @@ def i_do_something(whatever_parameters,another_param):
         .. note::
 
             You can put a not here if you want.
+            
+            Kobie was here
 
         """
 
