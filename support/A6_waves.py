@@ -29,6 +29,7 @@ from app import app
 import pandas as pd
 import numpy as np
 from .data_import import Data_Import
+from plotly.subplots import make_subplots
 import plotly.graph_objs as go
 
 from scipy.special import gamma, gammainc
@@ -381,6 +382,36 @@ def quantile_weibull3(p,alpha, beta,xi):
 def pdf_weibull(x,alpha,beta):
     return beta/alpha*(x/alpha)**(beta-1)*np.exp(-(x/alpha)**beta)
 
+## --------- Kobie's functions ----------- ##
+def month_names(df):
+    ## Create dataframe with Datetime index. Add month names
+
+    df_info = df.copy()
+    df_info.set_index('Date', inplace=True)
+    df_info['Month_Name'] = df_info.index.month_name()
+
+    ## Fill in all NaN values with a linear interpolation method
+#    df_info.interpolate(method='linear', axis=0, inplace=True)    
+    
+    ## Cast year, month and day to integers (previously floats)
+#    df_info.year = df_info.year.astype(int)
+#    df_info.month = df_info.month.astype(int)
+#    df_info.day = df_info.day.astype(int)
+#    df_info.time = df_info.time.astype(int)
+    
+    return list(df_info['Month_Name'].unique())
+
+## Boxplot formatting
+def col_range(N):
+   # generate an array of rainbow colors by fixing the saturation and lightness of the HSL
+    # representation of colour and marching around the hue.
+    # Plotly accepts any CSS color format, see e.g. http://www.w3schools.com/cssref/css_colors_legal.asp.
+    c = ['hsl('+str(h)+',50%'+',50%)' for h in np.linspace(0, 360, N)] 
+    
+    return c
+
+## --------- End of Kobie's functions ----------- ##
+
 ###############################################
 # put the dash layout here
 # ...
@@ -398,6 +429,14 @@ for y in np.arange(mny,mxy+1):
     yr_dict[str(y)] = str(y)
 print(mxy,mny)
 print(yr_dict)
+
+# Get a list of the month names for the boxplot
+months = month_names(df)
+
+# Boxplot colour formatting
+num_m = df['month'].nunique() ## 12 months in year
+box_colours = col_range(num_m) 
+
 
 # defaults (leave these alone):
 header_logo = html.A([html.Img(id="logo",src=app.get_asset_url('oceans21logo_small.png'),
@@ -424,6 +463,9 @@ layout = html.Div([
             html.Div([dcc.Graph(id="hmo-graph")]),
             html.Div([dcc.Graph(id="tp-graph")]),
             html.Div([dcc.Graph(id="dir-graph")]),
+            html.Div([html.H2("Wave characteristics grouped by Month")], 
+                      style={"textAlign": "center"}),
+            html.Div([dcc.Graph(id="box-graph")]),
     ], type="default"),
 
     html.Div([dcc.RangeSlider(id="year-range", min=mny, max=mxy, step=1, value=[mny, mxy],
@@ -443,7 +485,7 @@ layout = html.Div([
 
 
 @app.callback(
-    [Output('hmo-graph', 'figure'), Output('tp-graph', 'figure'), Output('dir-graph', 'figure')],
+    [Output('hmo-graph', 'figure'), Output('tp-graph', 'figure'), Output('dir-graph', 'figure'), Output('box-graph', 'figure')],
     [Input('year-range', 'value')])
 def update_figure(year):
     
@@ -498,7 +540,38 @@ def update_figure(year):
         polar_angularaxis_rotation=90,
         polar = dict(angularaxis = dict(direction = "clockwise",period = 6)                    )
         )
-
+    
+    ## Boxplot updates:
+    # Initialise figure with subplots
+    fig_bp = make_subplots(rows=3, cols=1, 
+                           subplot_titles=(f"Significant wave heights for {'-'.join(str(i) for i in year)}",
+                           f"Peak wave periods for {'-'.join(str(i) for i in year)}",
+                           f"Significant wave height directional distributions for {'-'.join(str(i) for i in year)}"))
+    
+    # Add traces
+    for month, month_name, cls in zip(dff.month.unique(), months, box_colours):
+        fig_bp.add_trace(go.Box(y=dff[dff['month'] == month]['hmo'], name=month_name, marker={'size': 4, 'color': cls}, showlegend=False), row=1, col=1)
+        fig_bp.add_trace(go.Box(y=dff[dff['month'] == month]['tp'], name=month_name, marker={'size': 4, 'color': cls}, showlegend=False), row=2, col=1)
+        fig_bp.add_trace(go.Box(y=dff[dff['month'] == month]['dir'], name=month_name, marker={'size': 4, 'color': cls}, showlegend=False), row=3, col=1)
+    
+    # Update xaxis properties
+    for i in [1,2,3]:
+        fig_bp.update_xaxes(title_text='Month', row=i, col=1)
+    
+    # Update yaxis properties
+    axes_labels = ['Sig wave height (m)', 'Peak wave period (s)', 'Sig wave dir (degrees)']
+    for ylabel in axes_labels:
+        fig_bp.update_yaxes(title_text=ylabel, row=(axes_labels.index(ylabel)+1), col=1)
+        
+    # Update figure layout
+    fig_bp.update_layout(autosize=True,
+                         margin={"l": 70, "b": 80, "r": 70},
+                         xaxis={"showticklabels": True,},
+                         yaxis={"zerolinecolor": "rgb(243, 243, 243)", "zerolinewidth": 3,},
+                         width=960,
+                         height=1100 #px
+                         )
+           
     return [{"data": trace1,
             "layout": go.Layout(title="Significant Wave Height", colorway=['#2c7bb6','#81e36d'],
                                 yaxis={"title": "Hm0 ( meter )"}, yaxis2={"title": "Tp ( second )", "side":"right", "overlaying":'y'}, 
@@ -506,6 +579,7 @@ def update_figure(year):
             {"data": trace2,
             "layout": go.Layout(title="Peak Wave Period", colorway=['#81e36d'],
                                 yaxis={"title": "Tp ( second )"}, xaxis={"title": "Date"})},
-            fig]
-
+            fig,
+            fig_bp
+            ]
 
