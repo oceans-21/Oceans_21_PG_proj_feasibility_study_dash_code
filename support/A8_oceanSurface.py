@@ -26,13 +26,13 @@ from app import app
 import pandas as pd
 import numpy as np
 
-from mpl_toolkits.basemap import Basemap
+# from mpl_toolkits.basemap import Basemap
 import base64
-import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1 import make_axes_locatable
+# import matplotlib.pyplot as plt
+# from mpl_toolkits.axes_grid1 import make_axes_locatable
 import os
 import plotly.graph_objs as go
-import matplotlib
+# import matplotlib
 ## functions go here:
 
 
@@ -179,9 +179,9 @@ slider = html.Div([html.Label('Forecasting timestep of ocean parameter'),
 
 
 #    html.Label(id='message1',style={'marginLeft':80,'marginBottom':-2}),#, children='Please select ocean state variable and forecasted hour to view.'),
-image = html.Div([
-                html.Img(id='image'),
-                ], style={'marginLeft':250})
+# image = html.Div([
+#                 html.Img(id='image'),
+#                 ], style={'marginLeft':250})
     
     
 graph = html.Div([dcc.Graph(id='map')], style={'marginLeft':200})
@@ -199,7 +199,7 @@ layout = html.Div([
     spacer,
     dropdown,
     slider,
-    image,
+    # image,
     spacer,
     graph,
     spacer,
@@ -218,43 +218,43 @@ def update_output(value):
 
 
 
-@app.callback(
-    dash.dependencies.Output('image', 'src'),
-    [dash.dependencies.Input('my-daq-slider-ex', 'value'),
-    dash.dependencies.Input('variable', 'value')])
-def plot_output(hour,var):
-    var_array = str(var)+'.npy'
-    selected_var = os.path.join(path, var_array)
-    data = np.load(selected_var)
-    f = data[int(hour)-1]
-    matplotlib.use('Agg')
-    m = Basemap(projection='cyl', llcrnrlon=xmin,llcrnrlat=ymin,urcrnrlon=xmax,urcrnrlat=ymax,resolution='l')
-    m.drawcoastlines()
-    # add intensities (currently normalised but will be fixed - eventually)
-    parallels = np.arange(-80.,10,5.)
-    m.drawparallels(parallels,labels=[False,True,True,False])
-    meridians = np.arange(10.,50.,5.)
-    m.drawmeridians(meridians,labels=[True,False,False,True])
-    plt.xlabel('\nLongitude')
-    plt.ylabel('Latitude')
-    # add all the bells and whistles
-    im = m.imshow(f[::-1],extent=[np.min(x),np.max(x),np.min(y),np.max(y)])
-    plt.title('Graphical representation of ' + str(var) + ' for a ' + str(hour) + ' hour forecast\n\n' )
-    # plt.colorbar(im, orientation="vertical", pad=0.1)
-    ax = plt.gca()
-    divider = make_axes_locatable(ax)
-    cax = divider.append_axes("right", size="5%", pad=0.5)
-    plt.colorbar(im, cax=cax)#, orientation="vertical", pad=0.1)
-    temp_image = os.path.join(path, 'temp.png')
-    print("temp: image",temp_image)
-    plt.savefig(temp_image)
-    plt.cla()
-    plt.clf()
-    plt.close()
-    # image_filename = 'temp.png' # replace with your own image
-    encoded_image = base64.b64encode(open(temp_image, 'rb').read())
-    src='data:image/png;base64,{}'.format(encoded_image.decode())
-    return src
+# @app.callback(
+#     dash.dependencies.Output('image', 'src'),
+#     [dash.dependencies.Input('my-daq-slider-ex', 'value'),
+#     dash.dependencies.Input('variable', 'value')])
+# def plot_output(hour,var):
+#     var_array = str(var)+'.npy'
+#     selected_var = os.path.join(path, var_array)
+#     data = np.load(selected_var)
+#     f = data[int(hour)-1]
+#     matplotlib.use('Agg')
+#     m = Basemap(projection='cyl', llcrnrlon=xmin,llcrnrlat=ymin,urcrnrlon=xmax,urcrnrlat=ymax,resolution='l')
+#     m.drawcoastlines()
+#     # add intensities (currently normalised but will be fixed - eventually)
+#     parallels = np.arange(-80.,10,5.)
+#     m.drawparallels(parallels,labels=[False,True,True,False])
+#     meridians = np.arange(10.,50.,5.)
+#     m.drawmeridians(meridians,labels=[True,False,False,True])
+#     plt.xlabel('\nLongitude')
+#     plt.ylabel('Latitude')
+#     # add all the bells and whistles
+#     im = m.imshow(f[::-1],extent=[np.min(x),np.max(x),np.min(y),np.max(y)])
+#     plt.title('Graphical representation of ' + str(var) + ' for a ' + str(hour) + ' hour forecast\n\n' )
+#     # plt.colorbar(im, orientation="vertical", pad=0.1)
+#     ax = plt.gca()
+#     divider = make_axes_locatable(ax)
+#     cax = divider.append_axes("right", size="5%", pad=0.5)
+#     plt.colorbar(im, cax=cax)#, orientation="vertical", pad=0.1)
+#     temp_image = os.path.join(path, 'temp.png')
+#     print("temp: image",temp_image)
+#     plt.savefig(temp_image)
+#     plt.cla()
+#     plt.clf()
+#     plt.close()
+#     # image_filename = 'temp.png' # replace with your own image
+#     encoded_image = base64.b64encode(open(temp_image, 'rb').read())
+#     src='data:image/png;base64,{}'.format(encoded_image.decode())
+#     return src
 
 
 @app.callback(
