@@ -37,13 +37,13 @@ import plotly.graph_objs as go
 
 
 address = os.path.dirname(os.path.abspath(__file__))
-print(address)
+# print(address)
 path = os.path.join(address, 'data')
 
 Longitude = os.path.join(path, 'Longetude.npy')
 Latitude = os.path.join(path, 'Latitude.npy')
 
-print(Longitude)
+# print(Longitude)
 
 ## This coordinate jumble will be fixed when the 'real' area is decided and
 ## incorporated
@@ -147,23 +147,24 @@ spacer = html.Div('', style={'padding': 10})
 
 
 
-dropdown = html.Div([html.Label('Ocean parameter',style={'marginLeft': 1}),
+dropdown = html.Div([html.Label('Ocean parameter:',style={'marginLeft': 1}),
                      html.Div('',style={'padding':15}),
                      dcc.Dropdown(id = 'variable',
                                   style={'height': '30px', 'width': '200px','marginBottom': '3em'},
                                   options=[
                                           {'label': 'Temperature', 'value': 'Temperature', 'disabled': False},
-                                          {'label': u'Wave height', 'value': 'wave_height', 'disabled': True},
-                                          {'label': 'Salinity', 'value': 'salinity', 'disabled': True},
-                                          {'label': 'Variable 4', 'value': 'var4', 'disabled': True},
-                                          {'label': 'Variable 5', 'value': 'var5', 'disabled': True}
+                                          {'label': 'Coming soon', 'value': 'wave_height', 'disabled': True},
+                                          # {'label': 'Salinity', 'value': 'salinity', 'disabled': True},
+                                          # {'label': 'Variable 4', 'value': 'var4', 'disabled': True},
+                                          # {'label': 'Variable 5', 'value': 'var5', 'disabled': True}
 
                                           ],
                                   value='Temperature',
+                                    clearable=False,
                                   )], style={'width': '49%', 'display': 'inline-block','vertical-align': 'top'})
 
 
-slider = html.Div([html.Label('Forecasting timestep of ocean parameter'),
+slider = html.Div([html.Label('Forecasted timestep of ocean parameter:'),
                    html.Div('',style={'padding':20}),
                    html.Div([
                            daq.Slider(
@@ -284,7 +285,7 @@ def plot_output_test_mapbox(hour,var):
                                   colorbar=dict(title='colourbar'),
                                   colorscale='Viridis'
                                   ),
-                    text=np.round(h,2))
+                    text= np.round(h,2))
                     ],
             'layout': go.Layout(
                     margin = dict(l=30, r=20, t=0, b=0),

@@ -19,11 +19,8 @@ import os
 #import io
 
 # import other modules here:
-import dash
 import dash_html_components as html
 import dash_core_components as dcc
-import dash_daq as daq
-import dash_table as tab
 from dash.dependencies import Input, Output, State
 from app import app
 import pandas as pd
@@ -41,34 +38,6 @@ app_color = {"graph_bg": "#082255", "graph_line": "#007ACE"}
 
 ## functions go here:
 ###############################################
-# you can put your own functions here:
-# ...
-def i_do_something(whatever_parameters,another_param):
-    """
-        Purpose: Fill this in.
-
-        :param whatever_parameters: Fill this in.
-        :type whatever_parameters: str
-        :param another_param: make copies of the param/type for more arguments to the functions.
-        :type another_param: bool
-
-        :returns:  None -- Fill here if something is returned.
-
-        How to use this function
-
-        >>> i_do_something("hello",11)
-
-
-        .. note::
-
-            You can put a not here if you want.
-
-        """
-        
-    # please comment your codes as you code :-)
-    print(whatever_parameters,another_param)
-
-    return None
 
 
 def load_data(filename):
@@ -91,8 +60,12 @@ def load_data(filename):
     df[df['hmo']==0] = np.nan
     
     df['Date'] = date
+
+    # print("df: ")
+    # print(df[df["year"] > 2000])
     
-    return df
+    # return df
+    return df[df["year"] > 2000]
 
 def wind_rose_update(in_df):
     
@@ -458,6 +431,8 @@ layout = html.Div([
 #    # header (leave alone):
     header_logo,
     header_text, html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(),
+
+    html.Div(["This page displays historical wave data. The significant wave height, period and direction are shown with corresponding boxplots and wind rose. Please wait for the graphs to load."]),html.Br(), html.Br(),
 
     dcc.Loading(id="loading", children=[
             html.Div([dcc.Graph(id="hmo-graph")]),

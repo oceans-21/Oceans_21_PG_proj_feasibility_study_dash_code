@@ -98,13 +98,13 @@ def get_salinity_data(debug=False):
 
     # print(vvel.shape, uvel.shape)
     # get means:
-    uvelbar = np.nanmean(uvel)
-    vvelbar = np.nanmean(vvel)
+    uvelbar = np.mean(uvel)
+    vvelbar = np.mean(vvel)
 
     # get the fluctuating velocities:
     uveldash = uvel - uvelbar
     vveldash = vvel - vvelbar
-    energy = 0.5 *(uveldash*uveldash + vveldash*vveldash)
+    energy = 0.5 *(uveldash*uveldash + vveldash*vveldash) *10000 # 100*100 to convert to cm^2.s^-2
 
     if debug: print(uvel)
     return energy
@@ -218,7 +218,6 @@ mapbox_access_token = "pk.eyJ1Ijoia2lyb2RoIiwiYSI6ImNrMDVjaWY0ZzBqaXAzbXFvenp3OW
 
 
 
-# todo: have to check out the id's of components
 ###############################################
 # put the dash layout here
 # ...
@@ -240,7 +239,7 @@ header_text = html.H1('Energy')
 
 # these are yours :-)
 # intro text:
-intro = html.Div(["This page displays forecasted hourly eddy kinetic energy spread in normalized units. Use the sliders to change between the various "
+intro = html.Div(["This page displays forecasted hourly eddy kinetic energy spread in cm^2.s^-2. Use the sliders to change between the various "
                   "depths and time steps. The resulting energy profiles will be displayed for the point chosen "
                   "on the graph."])
 
@@ -272,10 +271,10 @@ trace = [dict(
             type="scattermapbox",
             lon=flatten(longitude[0,:],latitude[:,0],sal_data[0,0,:,:])["lon"],#[30,31,32],#longitude[0,:],
             lat=flatten(longitude[0,:],latitude[:,0],sal_data[0,0,:,:])["lat"],#[-30,-31,-32],#latitude[:,0],
-            text=[format(j,".2f")+" "+ "Normalized units" for j in flatten(longitude[0,:],latitude[:,0],sal_data[0,0,:,:])["data"]],
+            text=[format(j,".2f")+" "+ "cm^2.s^-2" for j in flatten(longitude[0,:],latitude[:,0],sal_data[0,0,:,:])["data"]],
             # z=flatten(longitude[0,:],latitude[:,0],sal_data[0,-3,:,:])["data"],#[2,3,4],#sal_data[0,0,:,:],
             # name="the name",
-            marker=dict(size=10, opacity=0.6, cmin=0,cmax=4,
+            marker=dict(size=10, opacity=0.6, cmin=0,cmax=4000,
                 color=flatten(longitude[0,:],latitude[:,0],sal_data[0,0,:,:])["data"],
                 colorscale="Jet", #Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis,Cividis
                 colorbar=dict(
@@ -338,11 +337,11 @@ themometer = daq.Thermometer(
     className = "thermometer",
     value=0,
     min=0,
-    max=4,
+    max=4000,
     # style={'height': '100vh'},
     color = " #f83a3a",
     showCurrentValue=True,
-    units="Normalized EKE",
+    units="cm^2.s^-2",
     # size= '25%'#300,
     # labelPosition = "top",
     # label="hello"
@@ -350,10 +349,10 @@ themometer = daq.Thermometer(
 
 # a block with all the required indicators:
 indicators = html.Div(id="salIndicators",className="salIndicators",children=[
-    html.Div(id="surfaceMaxE",children=["Surface Maximum EKE = NaN "+"Normalized units"],style={'padding-left':"5vw",'padding-top':"5vh"}),
-    html.Div(id="surfaceMinE", children=["Surface Minimum EKE = NaN "+"Normalized units"],style={'padding-left':"5vw",'padding-top':"5vh"}),
-    html.Div(id="surfaceAvgE", children=["Surface Average EKE = NaN "+"Normalized units"],style={'padding-left':"5vw",'padding-top':"5vh"}),
-    html.Div(id="depthAvgE", children=["Depth Average EKE = NaN "+"Normalized units"],style={'padding-left':"5vw",'padding-top':"5vh",'padding-bottom':"5vh"})
+    html.Div(id="surfaceMaxE",children=["Surface Maximum EKE = NaN "+"cm^2.s^-2"],style={'padding-left':"5vw",'padding-top':"5vh"}),
+    html.Div(id="surfaceMinE", children=["Surface Minimum EKE = NaN "+"cm^2.s^-2"],style={'padding-left':"5vw",'padding-top':"5vh"}),
+    html.Div(id="surfaceAvgE", children=["Surface Average EKE = NaN "+"cm^2.s^-2"],style={'padding-left':"5vw",'padding-top':"5vh"}),
+    html.Div(id="depthAvgE", children=["Depth Average EKE = NaN "+"cm^2.s^-2"],style={'padding-left':"5vw",'padding-top':"5vh",'padding-bottom':"5vh"})
     # html.Div(id="surfaceMaxE", children=["Surface Maximum Salinity = 0.0 deg C"]),
     # html.Div(id="surfaceMaxE", children=["Surface Maximum Salinity = 0.0 deg C"])
 ])
@@ -448,17 +447,17 @@ def display_click_data(salDepthSliderValue,salTimeSliderValue):
     # update components one by one
     # 1) surface maximum salinity
     surface_maximum_salinity = np.nanmax(data_layer)
-    surface_maximum_salinity = "Surface Maximum Energy = "+format(surface_maximum_salinity,".3f") + " Normalized units"
+    surface_maximum_salinity = "Surface Maximum Energy = "+format(surface_maximum_salinity,".3f") + " cm^2.s^-2"
     # print("sal",surface_maximum_salinity)
 
     # 2) surface minimum salinity
     surface_minimum_salinity = np.nanmin(data_layer[np.nonzero(data_layer)])
-    surface_minimum_salinity = "Surface Minimum Energy = "+format(surface_minimum_salinity,".3f") + " Normalized units"
+    surface_minimum_salinity = "Surface Minimum Energy = "+format(surface_minimum_salinity,".3f") + " cm^2.s^-2"
 
 
     # 3) surface average salinity:
     surface_average_salinity = np.nanmean(data_layer)
-    surface_average_salinity = "Surface Average Energy = "+format(surface_average_salinity ,".2f") + " Normalized units"
+    surface_average_salinity = "Surface Average Energy = "+format(surface_average_salinity ,".2f") + " cm^2.s^-2"
 
     # 4) the graph/figure:
     # layout for main salinity graph:
@@ -485,8 +484,8 @@ def display_click_data(salDepthSliderValue,salTimeSliderValue):
         type="scattermapbox",
         lon=flatten(longitude[0, :], latitude[:, 0], data_layer)["lon"],
         lat=flatten(longitude[0, :], latitude[:, 0], data_layer)["lat"],
-        text=[format(j,".2f")+" "+ "Normalized units" for j in flatten(longitude[0, :], latitude[:, 0], data_layer)["data"]],
-        marker=dict(size=10, opacity=0.6, cmin=0,cmax=4,
+        text=[format(j,".2f")+" "+ "cm^2.s^-2" for j in flatten(longitude[0, :], latitude[:, 0], data_layer)["data"]],
+        marker=dict(size=10, opacity=0.6, cmin=0,cmax=4000,
                     color=flatten(longitude[0, :], latitude[:, 0], data_layer)["data"],
                     colorscale="Jet",# Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis,Cividis
                     colorbar=dict(
@@ -537,7 +536,7 @@ def display_click_data(click_data,salDepthSliderValue,salTimeSliderValue,depth_a
 
         # get the depth average value for display:
         depth_averaged_salinity = np.nanmean(depth_profile)
-        depth_averaged_salinity_text = "Depth Average Energy = "+format(depth_averaged_salinity,".2f")+" Normalized units"
+        depth_averaged_salinity_text = "Depth Average Energy = "+format(depth_averaged_salinity,".2f")+" cm^2.s^-2"
 
 
         # processing for figures:
@@ -551,7 +550,7 @@ def display_click_data(click_data,salDepthSliderValue,salTimeSliderValue,depth_a
                 {'x': [depth_averaged_salinity for i in range(len(depth_data))], 'y': depth_data,
                  'type': 'line',
                  'mode':"lines",
-                 'name': 'Average energy = '+format(depth_averaged_salinity,".2f")+" "+"Normalized units",
+                 'name': 'Average energy = '+format(depth_averaged_salinity,".2f")+" "+"cm^2.s^-2",
                  # 'marker':dict(size=10, opacity=1)
                  }
             ]
@@ -564,7 +563,7 @@ def display_click_data(click_data,salDepthSliderValue,salTimeSliderValue,depth_a
             {'x': get_time_data(), 'y': [np.nanmean(forecast_profile) for i in range(len(get_time_data()))],
              'type': 'line',
              'mode': "lines",
-             'name': 'Average energy = ' + format(np.nanmean(forecast_profile),".2f") + " Normalized units",
+             'name': 'Average energy = ' + format(np.nanmean(forecast_profile),".2f") + " cm^2.s^-2",
              # 'marker':dict(size=10, opacity=1)
              }
             ]
@@ -587,7 +586,7 @@ def display_click_data(click_data,salDepthSliderValue,salTimeSliderValue,depth_a
             ),
             autorange="reversed"),
             'xaxis': dict(
-            title="Energy (Normalized units)",
+            title="Energy (cm^2.s^-2)",
             font=dict(
                 family="Courier New, monospace",
                 size=18,
@@ -605,7 +604,7 @@ def display_click_data(click_data,salDepthSliderValue,salTimeSliderValue,depth_a
             #     color="#7f7f7f")
             ),
             'yaxis': dict(
-                title="Energy (Normalized units)",
+                title="Energy (cm^2.s^-2)",
                 font=dict(
                     family="Courier New, monospace",
                     size=18,
