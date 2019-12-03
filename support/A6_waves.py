@@ -427,8 +427,8 @@ mny = int(df['year'].min())
 yr_dict = {}
 for y in np.arange(mny,mxy+1):
     yr_dict[str(y)] = str(y)
-print(mxy,mny)
-print(yr_dict)
+# print(mxy,mny)
+# print(yr_dict)
 
 # Get a list of the month names for the boxplot
 months = month_names(df)
