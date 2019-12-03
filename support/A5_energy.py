@@ -240,7 +240,7 @@ header_text = html.H1('Energy')
 
 # these are yours :-)
 # intro text:
-intro = html.Div(["This page displays forecasted hourly eddy kinetic energy data (Normalized units). Use the sliders to change between the various "
+intro = html.Div(["This page displays forecasted hourly eddy kinetic energy spread in normalized units. Use the sliders to change between the various "
                   "depths and time steps. The resulting energy profiles will be displayed for the point chosen "
                   "on the graph."])
 
@@ -275,7 +275,7 @@ trace = [dict(
             text=[format(j,".2f")+" "+ "Normalized units" for j in flatten(longitude[0,:],latitude[:,0],sal_data[0,0,:,:])["data"]],
             # z=flatten(longitude[0,:],latitude[:,0],sal_data[0,-3,:,:])["data"],#[2,3,4],#sal_data[0,0,:,:],
             # name="the name",
-            marker=dict(size=10, opacity=0.6, cmin=30,cmax=37,
+            marker=dict(size=10, opacity=0.6, cmin=0,cmax=4,
                 color=flatten(longitude[0,:],latitude[:,0],sal_data[0,0,:,:])["data"],
                 colorscale="Jet", #Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis,Cividis
                 colorbar=dict(
@@ -338,7 +338,7 @@ themometer = daq.Thermometer(
     className = "thermometer",
     value=0,
     min=0,
-    max=10,
+    max=4,
     # style={'height': '100vh'},
     color = " #f83a3a",
     showCurrentValue=True,
@@ -486,7 +486,7 @@ def display_click_data(salDepthSliderValue,salTimeSliderValue):
         lon=flatten(longitude[0, :], latitude[:, 0], data_layer)["lon"],
         lat=flatten(longitude[0, :], latitude[:, 0], data_layer)["lat"],
         text=[format(j,".2f")+" "+ "Normalized units" for j in flatten(longitude[0, :], latitude[:, 0], data_layer)["data"]],
-        marker=dict(size=10, opacity=0.6, cmin=30,cmax=37,
+        marker=dict(size=10, opacity=0.6, cmin=0,cmax=4,
                     color=flatten(longitude[0, :], latitude[:, 0], data_layer)["data"],
                     colorscale="Jet",# Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis,Cividis
                     colorbar=dict(
@@ -611,7 +611,8 @@ def display_click_data(click_data,salDepthSliderValue,salTimeSliderValue,depth_a
                     size=18,
                     color="#7f7f7f"
                 ),
-                autorange="reversed"),
+                # autorange="reversed"
+            ),
             'xaxis': dict(
                 title="Time",
                 font=dict(

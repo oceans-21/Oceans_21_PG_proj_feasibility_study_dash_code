@@ -78,10 +78,8 @@ mapbox_access_token = "pk.eyJ1Ijoia2lyb2RoIiwiYSI6ImNrMDVjaWY0ZzBqaXAzbXFvenp3OW
 
 ''' markdown texts '''
 markdown_text = '''
-#### Introduction
-
-Maybe we can write a short introduction on forecasting the ocean state. Can maybe
-also refer the reader to [articles](http://commonmark.org/) or [websites](http://commonmark.org/) or whatever.
+This page displays forecasted hourly air temperature (2 m). Use the sliders to change between 
+the various time steps. The resulting air temperature data will be displayed in the map.
 '''
 
 
@@ -196,7 +194,7 @@ layout = html.Div([
     header_text, html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(),
 
     # Your components:
-    V,
+    # V,
     text,
     spacer,
     dropdown,
