@@ -65,7 +65,7 @@ def load_data(filename):
     # print(df[df["year"] > 2000])
     
     # return df
-    return df[df["year"] > 2000]
+    return df[df["year"] > 2004]
 
 def wind_rose_update(in_df):
     
@@ -432,7 +432,7 @@ layout = html.Div([
     header_logo,
     header_text, html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(), html.Br(),
 
-    html.Div(["This page displays historical wave data. The significant wave height, period and direction are shown with corresponding boxplots and wind rose. Please wait for the graphs to load."]),html.Br(), html.Br(),
+    html.Div(["This page displays historical wave data. The significant wave height, period and direction are shown with corresponding boxplots and wind rose. Please wait for the graphs to load. Please refresh if graphs do not load."]),html.Br(), html.Br(),
 
     dcc.Loading(id="loading", children=[
             html.Div([dcc.Graph(id="hmo-graph")]),
