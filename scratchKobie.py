@@ -3,7 +3,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 from app import app
-from support import A1_welcome,A2_temperature,A3_salinity,A4_currents,A5_energy,A6_waves,A7_shipRouteOptimization,A8_oceanSurface,A9_particleTracking
+from support import A1_welcome,A6_waves
 import os
 
 app.layout = html.Div([
@@ -56,4 +56,4 @@ def display_page(pathname):
         return '404'
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)

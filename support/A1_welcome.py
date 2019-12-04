@@ -114,17 +114,8 @@ layout = html.Div(id="welcomePages",children=[
     ocean_forecast_measures_heading,
     ocean_forecast_measures,
     html.Br(),
-    html.Div(id="text1",children=["Please use these buttons below to navigate to the appropriate pages:"]),
+    html.Div(id="text1",children=["Please use these buttons below to navigate to the different web tools:"]),
 
 ])
 
 
-# all call backs go here:
-# ...
-
-# callback to display what value chosen in dropdown
-# @app.callback(
-#     Output('welcome-display-value', 'children'),
-#     [Input('welcome-dropdown', 'value')])
-# def display_value(value):
-#     return 'You have selected "{}"'.format(value)
