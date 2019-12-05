@@ -135,7 +135,7 @@ def get_depth_data(debug=False):
     if debug: print(len(depth))
     return depth
 
-get_depth_data(True)
+get_depth_data(False)
 # get the depth data:
 def get_lat_data(debug=False):
     # path to data:
@@ -206,7 +206,7 @@ time_data = get_time_data()
 depth_data = get_depth_data()
 longitude = get_lon_data()[:,:-1]
 latitude = get_lat_data()[:,:-1]
-print (uvel_data.shape,vvel_data.shape,time_data.shape,depth_data.shape,longitude.shape,latitude.shape)
+# print (uvel_data.shape,vvel_data.shape,time_data.shape,depth_data.shape,longitude.shape,latitude.shape)
 ###############################################
 # put the dash layout here
 # ...

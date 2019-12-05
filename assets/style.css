@@ -138,10 +138,45 @@ body {
   background-position: right top;
   /* background-size: 200px 200px; */
   /* background-image: linear-gradient(to top, #7f7fD5 0%, #86A8E7 100%); */
-  background-image: linear-gradient(to top, #16edff 0%, white 100%);
+  /* background-image: linear-gradient(to top, #16edff 0%, white 100%); */
+  /* corporate colours: */
+  background-color: rgb(175, 175, 175);
 
   /* background-color: #cccccc; */
+
+
 }
+
+/* #welcomePages {
+  position: relative;
+  height: 70px;
+  width: 600px;
+  background: #e0efe3;
+}
+#welcomePages:before {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 100% 50%;
+  width: 340px;
+  height: 80px;
+  background-color: white;
+  right: -5px;
+  top: 40px;
+}
+#welcomePages:after {
+  content: "";
+  display: block;
+  position: absolute;
+  border-radius: 100% 50%;
+  width: 300px;
+  height: 70px;
+  background-color: #e0efe3;
+  left: 0;
+  top: 27px;
+} */
+
+
 /* page-content.body{
   background-image: linear-gradient(to top, #7f7fD5 0%, #86A8E7 100%, #91EAE4 100%);
 } */
@@ -186,7 +221,8 @@ h6 { font-size: 2.0rem; line-height: 1.6;  letter-spacing: 0; margin-bottom: 0.7
 /* for the font, i put this here */
 h1 {
   font-family: "Impact", fantasy;
-  color: #0e25ca;
+  color: rgb(1, 45, 80);
+  /* color: rgba(49, 147, 209); */
   text-align: center;
   letter-spacing: 2px;
 }
@@ -234,7 +270,8 @@ input[type="button"] {
   height: 38px;
   padding: 0 30px;
   /* color: white; */
-  color: #86c8ca;
+  color: rgb(175, 175, 175);
+  /* #86c8ca; */
   text-align: center;
   font-size: 11px;
   font-weight: 600;
@@ -258,7 +295,8 @@ button:focus,
 input[type="submit"]:focus,
 input[type="reset"]:focus,
 input[type="button"]:focus {
-  color: #333;
+  color: rgb(49, 147, 209);
+  /* #86c8ca; */
   border-color: #888;
   outline: 0; }
 .button.button-primary,
@@ -285,13 +323,14 @@ input[type="button"].button-primary:focus {
   /* this is for the particle tracking button */
 .particleTrackingButton {
   display: inline-block;
-  background-image: url('particle_tracking.gif');
+  /* background-image: url('particle_tracking.gif'); */
   /* background-position: center; */
   border-radius: 500px; /*4px;*/
-  color: #FFF;
+  background-color: rgb(1, 45, 80);
+  color: white;
 }
 .welcomePage {
-  background-color: blue;
+  background-color: rgb(1, 45, 80);
   display: inline-block;
   border-radius: 500px;
 }
@@ -299,51 +338,58 @@ input[type="button"].button-primary:focus {
 /* this is for the aprticle tracking button */
 .temperature {
   display: inline-block;
-  background-image: url('temperature.gif');
+  /* background-image: url('temperature.gif'); */
   /* background-position: center; */
+  background-color: rgb(1, 45, 80);
   border-radius: 500px; /*4px;*/
 }
 /* this is for the aprticle tracking button */
 .salinity {
   display: inline-block;
-  background-image: url('salinity.gif');
+  /* background-image: url('salinity.gif'); */
+  background-color: rgb(1, 45, 80);
   background-position: center;
   border-radius: 500px; /*4px;*/
 }
 /* this is for the aprticle tracking button */
 .currents {
   display: inline-block;
-  background-image: url('currents.gif');
+  /* background-image: url('currents.gif'); */
+  background-color: rgb(1, 45, 80);
   background-position: center;
   border-radius: 500px; /*4px;*/
 }
 /* this is for the aprticle tracking button */
 .energy {
   display: inline-block;
-  background-image: url('energy.gif');
+  /* background-image: url('energy.gif'); */
   /* background-position: center; */
   border-radius: 500px; /*4px;*/
+  background-color: rgb(1, 45, 80);
 }
 /* this is for the aprticle tracking button */
 .waves {
   display: inline-block;
-  background-image: url('wave.gif');
+  /* background-image: url('wave.gif'); */
   background-position: center;
   border-radius: 500px; /*4px;*/
+  background-color: rgb(1, 45, 80);
 }
 /* this is for the aprticle tracking button */
 .shipRouteOptimization {
   display: inline-block;
-  background-image: url('shipRouteOptimization.gif');
+  /* background-image: url('shipRouteOptimization.gif'); */
   background-position: right;
   border-radius: 500px; /*4px;*/
+  background-color: rgb(1, 45, 80);
 }
 /* this is for the aprticle tracking button */
 .oceanSurface {
   display: inline-block;
-  background-image: url('surface.gif');
+  /* background-image: url('surface.gif'); */
   background-position: center;
   border-radius: 500px; /*4px;*/
+  background-color: rgb(1, 45, 80);
 }
 
 /* introduction text
