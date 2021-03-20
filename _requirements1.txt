@@ -28,7 +28,7 @@ idna==2.6
 imagesize==1.0.0
 ipython-genutils==0.2.0
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2==2.11.3
 jsonschema==2.6.0
 jupyter-core==4.5.0
 kiwisolver==1.0.1
