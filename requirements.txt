@@ -3,7 +3,7 @@ Flask==1.1.1
 Flask-Compress==1.4.0
 Jinja2==2.10.1
 MarkupSafe==1.1.1
-PyYAML==5.1.2
+PyYAML==5.4
 Werkzeug==0.15.6
 basemap==1.2.0
 certifi==2019.6.16
