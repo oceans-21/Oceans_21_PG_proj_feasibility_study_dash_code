@@ -24,7 +24,7 @@ mkl-service==2.3.0
 netCDF4==1.5.1.2
 numpy==1.17.1
 pandas==0.25.1
-pip==19.2.3
+pip==21.1
 plotly==4.1.1
 pyparsing==2.4.2
 pyproj==1.9.6
