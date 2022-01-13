@@ -45,7 +45,7 @@ numpy==1.16.4
 olefile==0.46
 pandas==0.24.0
 pathtools==0.1.2
-Pillow==5.4.1
+Pillow==9.0.0
 plotly==3.6.1
 pluggy==0.6.0
 py==1.5.3
